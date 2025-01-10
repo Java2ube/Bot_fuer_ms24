@@ -18,11 +18,15 @@ type
     Edit2: TEdit;
     Edit3: TEdit;
     Edit4: TEdit;
+    Edit5: TEdit;
+    Edit6: TEdit;
+    Edit7: TEdit;
+    Edit8: TEdit;
     Memo1: TMemo;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure KI();
+    procedure KI(VAR klassenstuffe: byte);
   private
 
   public
@@ -36,7 +40,7 @@ implementation
 
 Type tFeld = Array[1..24] of String;
 Var Feld: tFeld;
-    a,b: byte;
+    a,b, ks: byte;
 
 
 {$R *.lfm}
@@ -83,25 +87,37 @@ begin
 end;
 
 procedure TForm1.KI(VAR klassenstuffe: byte);
-VAR i, j, m1, m2,m3,m4, op1, op2, op3, op4, ps1, ps2, ps3, ps4, entW: byte;
+VAR i, j,b, laenge, quersummeB, m1, m2,m3,m4,m5, op1, op2, op3, op4,op5, ps1, ps2, ps3, ps4,ps5, entW: byte;
+    quersummeS: string;
 begin
+     quersummeB:=0;
+
      op1:=0;
      op2:=0;
      op3:=0;
      op4:=0;
+     op5:=0;
 
      ps1:=0;
      ps2:=0;
      ps3:=0;
      ps4:=0;
+     ps5:=0;
 
      m1:=0;
      m2:=0;
      m3:=0;
      m4:=0;
+     m5:=0;
      //Würfeln
      i:= random(12)+1;
      j:= random(12)+1;
+
+     //Test
+     //(*
+     Edit6.text:=inttostr(i);
+     Edit7.text:=inttostr(j);
+     //*)
 
      //Mögliche Optionen untersuchen
      //Addition immer möglich solange es frei oder blau ist das Feld
@@ -119,6 +135,21 @@ begin
        if(Feld[j*i]='frei') or (Feld[j*i]='rot') then
        begin
          m3:=j*i;
+       end;
+     end
+     else
+     //Quersumme wird errechnet
+     begin
+       quersummeS:=InttoStr(j*i);
+       Edit8.text:=quersummeS;
+       laenge:= Length(quersummeS);
+       for b:= 1 to laenge do
+       begin
+         quersummeB:=quersummeB+StrtoInt(quersummeS[b]);
+       end;
+       if(Feld[quersummeB]='frei') or (Feld[quersummeB]='rot') then
+       begin
+         m5:=quersummeB;
        end;
      end;
      if(i>=j) then
@@ -167,10 +198,13 @@ begin
      end;
 
      //Test
-     //Edit1.text:=IntToStr(m1);
-     //Edit2.Text:=InttoStr(m2);
-     //Edit3.Text:=InttoStr(m3);
-     //Edit4.Text:=InttoStr(m4);
+     //(*
+     Edit1.text:=IntToStr(m1);
+     Edit2.Text:=InttoStr(m2);
+     Edit3.Text:=InttoStr(m3);
+     Edit4.Text:=InttoStr(m4);
+     Edit5.Text:=InttoStr(m5);
+     //*)
 
 
 
@@ -180,25 +214,30 @@ begin
      abstandMitte(m2, op2);
      abstandMitte(m3, op3);
      abstandMitte(m4, op4);
+     abstandMitte(m5, op5);
 
 
 
 
-     if (op1 <= op2) and (op1 <= op3) and (op1 <= op4) then
+     if (op1 <= op2) and (op1 <= op3) and (op1 <= op4) and (op1<=op5) then
      begin
           ps1:=ps1+1
      end
-     else if (op2 <= op1) and (op2 <= op3) and (op2 <= op4) then
+     else if (op2 <= op1) and (op2 <= op3) and (op2 <= op4) and (op2<=op5) then
      begin
           ps2:=ps2+1
      end
-     else if (op3 <= op1) and (op3 <= op2) and (op3 <= op4) then
+     else if (op3 <= op1) and (op3 <= op2) and (op3 <= op4) and (op3<=op5) then
      begin
           ps3:=ps3+1
      end
-     else
+     else if (op4 <= op1) and (op4 <= op2) and (op4 <= op3) and (op4<=op5) then
      begin
           ps4:=ps4+1
+     end
+     else
+     begin
+          ps5:=ps5+1
      end;
 
 
@@ -207,28 +246,32 @@ begin
    umgebungUntersuchen(m2, ps2);
    umgebungUntersuchen(m3, ps3);
    umgebungUntersuchen(m4, ps4);
-
+   umgebungUntersuchen(m5, ps5);
 
      //Auswertung der Punktsysteme
-     if (ps1 >= ps2) and (ps1 >= ps3) and (ps1 >= ps4) then
+     if (ps1 >= ps2) and (ps1 >= ps3) and (ps1 >= ps4) and (ps1 >= ps5) then
      begin
           Feld[m1]:='blau';
      end
-     else if (ps2 >= ps1) and (ps2 >= ps3) and (ps2 >= ps4) then
+     else if (ps2 >= ps1) and (ps2 >= ps3) and (ps2 >= ps4) and (ps2 >= ps5) then
      begin
           Feld[m2]:='blau';
      end
-     else if (ps3 >= ps1) and (ps3 >= ps2) and (ps3 >= ps4) then
+     else if (ps3 >= ps1) and (ps3 >= ps2) and (ps3 >= ps4) and (ps3 >= ps5) then
      begin
           Feld[m3]:='blau';
      end
-     else
+     else if (ps4 >= ps1) and (ps4 >= ps2) and (ps4 >= ps3) and (ps4 >= ps5) then
      begin
           Feld[m4]:='blau';
-     end;
-     if(ps1=ps2) and (ps1=ps3) and (ps1=ps4) then
+     end
+     else
      begin
-        entW:=random(4)+1;
+          Feld[m5]:='blau';
+     end;
+     if(ps1=ps2) and (ps1=ps3) and (ps1=ps4) and (ps1=ps5) then
+     begin
+        entW:=random(5)+1;
         if(entW=1) then
         begin
              Feld[m1]:='blau';
@@ -241,11 +284,14 @@ begin
         begin
              Feld[m3]:='blau';
         end
-        else
+        else if(entW=4) then
         begin
              Feld[m4]:='blau';
+        end
+        else
+        begin
+             Feld[m5]:='blau';
         end;
-
      end;
 
 
@@ -259,7 +305,8 @@ procedure TForm1.Button1Click(Sender: TObject);
 begin
   memo1.Clear;
 
-  KI();
+  ks:=3;
+  KI(ks);
   for b:=1 to 24 do
   begin
     memo1.Lines.add(Feld[b]);
