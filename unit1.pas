@@ -15,6 +15,7 @@ type
     Button1: TButton;
     Button2: TButton;
     Edit1: TEdit;
+    Edit10: TEdit;
     Edit2: TEdit;
     Edit3: TEdit;
     Edit4: TEdit;
@@ -22,6 +23,7 @@ type
     Edit6: TEdit;
     Edit7: TEdit;
     Edit8: TEdit;
+    Edit9: TEdit;
     Memo1: TMemo;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -39,8 +41,10 @@ var
 implementation
 
 Type tFeld = Array[1..24] of String;
+     tGroesse = Array[0..4] of byte;
 Var Feld: tFeld;
-    a,b, ks: byte;
+    Groesse: tGroesse;
+    a,b,h, ks: byte;
 
 
 {$R *.lfm}
@@ -87,7 +91,7 @@ begin
 end;
 
 procedure TForm1.KI(VAR klassenstuffe: byte);
-VAR i, j,b, laenge, quersummeB, m1, m2,m3,m4,m5, op1, op2, op3, op4,op5, ps1, ps2, ps3, ps4,ps5, entW: byte;
+VAR i, j,b, laenge, temp, quersummeB, m1, m2,m3,m4,m5, op1, op2, op3, op4,op5, ps1, ps2, ps3, ps4,ps5, entW: byte;
     quersummeS: string;
 begin
      quersummeB:=0;
@@ -198,13 +202,9 @@ begin
      end;
 
      //Test
-     //(*
-     Edit1.text:=IntToStr(m1);
-     Edit2.Text:=InttoStr(m2);
-     Edit3.Text:=InttoStr(m3);
-     Edit4.Text:=InttoStr(m4);
-     Edit5.Text:=InttoStr(m5);
-     //*)
+
+
+
 
 
 
@@ -221,23 +221,23 @@ begin
 
      if (op1 <= op2) and (op1 <= op3) and (op1 <= op4) and (op1<=op5) then
      begin
-          ps1:=ps1+1
+          ps1:=ps1+2
      end
      else if (op2 <= op1) and (op2 <= op3) and (op2 <= op4) and (op2<=op5) then
      begin
-          ps2:=ps2+1
+          ps2:=ps2+2
      end
      else if (op3 <= op1) and (op3 <= op2) and (op3 <= op4) and (op3<=op5) then
      begin
-          ps3:=ps3+1
+          ps3:=ps3+2
      end
      else if (op4 <= op1) and (op4 <= op2) and (op4 <= op3) and (op4<=op5) then
      begin
-          ps4:=ps4+1
+          ps4:=ps4+2
      end
      else
      begin
-          ps5:=ps5+1
+          ps5:=ps5+2
      end;
 
 
@@ -248,52 +248,114 @@ begin
    umgebungUntersuchen(m4, ps4);
    umgebungUntersuchen(m5, ps5);
 
+
+     Edit1.text:=IntToStr(ps1);
+     Edit2.Text:=InttoStr(ps2);
+     Edit3.Text:=InttoStr(ps3);
+     Edit4.Text:=InttoStr(ps4);
+     Edit5.Text:=InttoStr(ps5);
+
+   //Sortiert den Array nach Größe
+
+
      //Auswertung der Punktsysteme
-     if (ps1 >= ps2) and (ps1 >= ps3) and (ps1 >= ps4) and (ps1 >= ps5) then
+     if (ps1 > ps2) and (ps1 > ps3) and (ps1 > ps4) and (ps1 > ps5) and not(ps1=0) then
      begin
+          if(Feld[m1]='frei') or (Feld[m1]='rot') then
+          begin
           Feld[m1]:='blau';
+          end;
+          h:=h+1;
      end
-     else if (ps2 >= ps1) and (ps2 >= ps3) and (ps2 >= ps4) and (ps2 >= ps5) then
+     else if (ps2 > ps1) and (ps2 > ps3) and (ps2 > ps4) and (ps2 > ps5)and  not(ps2=0) then
      begin
+          if(Feld[m2]='frei') or (Feld[m2]='rot') then
+          begin
           Feld[m2]:='blau';
+          end;
+          h:=h+1;
      end
-     else if (ps3 >= ps1) and (ps3 >= ps2) and (ps3 >= ps4) and (ps3 >= ps5) then
+     else if (ps3 > ps1) and (ps3 > ps2) and (ps3 > ps4) and (ps3 > ps5) and not(ps3=0) then
      begin
+          if(Feld[m3]='frei') or (Feld[m3]='rot') then
+          begin
           Feld[m3]:='blau';
+          end;
+          h:=h+1;
      end
-     else if (ps4 >= ps1) and (ps4 >= ps2) and (ps4 >= ps3) and (ps4 >= ps5) then
+     else if (ps4 > ps1) and (ps4 > ps2) and (ps4 > ps3) and (ps4 > ps5) and not(ps4=0) then
      begin
+          if(Feld[m4]='frei') or (Feld[m4]='rot') then
+          begin
           Feld[m4]:='blau';
+          end;
+          h:=h+1;
      end
-     else
+     else if (ps5 > ps1) and (ps5 > ps2) and (ps5 > ps3) and (ps5 > ps4) and not(ps5=0) then
      begin
+          if(Feld[m5]='frei') or (Feld[m5]='rot') then
+          begin
           Feld[m5]:='blau';
+          end;
+          h:=h+1;
      end;
-     if(ps1=ps2) and (ps1=ps3) and (ps1=ps4) and (ps1=ps5) then
+     (*if(groesse[4]=ps1) then
+     begin
+       Feld[m1]:='blau';
+       h:=h+1;
+     end
+     else if(groesse[4]=ps2) then
+     begin
+       Feld[m2]:='blau';
+       h:=h+1;
+     end
+     else if(groesse[4]=ps3) then
+     begin
+       Feld[m3]:='blau';
+       h:=h+1;
+     end
+     else if(groesse[4]=ps4) then
+     begin
+       Feld[m4]:='blau';
+       h:=h+1;
+     end
+     else if(groesse[4]=ps5) then
+     begin
+       Feld[m5]:='blau';
+       h:=h+1;
+     end;  *)
+     (*else if(ps1=ps2) or (ps1=ps3) or (ps1=ps4) or (ps1=ps5) and not(ps1=0) then
      begin
         entW:=random(5)+1;
         if(entW=1) then
         begin
              Feld[m1]:='blau';
+             h:=h+1;
         end
         else if(entW=2) then
         begin
              Feld[m2]:='blau';
+             h:=h+1;
         end
         else if(entW=3) then
         begin
              Feld[m3]:='blau';
+            h:=h+1;
         end
         else if(entW=4) then
         begin
              Feld[m4]:='blau';
+             h:=h+1;
         end
         else
         begin
              Feld[m5]:='blau';
+             h:=h+1;
         end;
-     end;
+     end;        *)
 
+
+     Edit9.text:=InttoStr(h);
 
 end;
 
@@ -303,8 +365,8 @@ end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-  memo1.Clear;
 
+  memo1.Clear;
   ks:=3;
   KI(ks);
   for b:=1 to 24 do
@@ -321,6 +383,7 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
 
+  h:=0;
   randomize;
   for a:=1 to 24 do
     begin
